@@ -1,12 +1,8 @@
-# Async RPC
+# Async RPC | Resonate Go SDK
 
-**Resonate Go SDK**
+Three async-RPC dispatch patterns side-by-side against a shared `echo` leaf function: await-chain, detached, and fan-out.
 
-This example demonstrates Resonate's async RPC capabilities with three dispatch patterns side-by-side against a shared `echo` leaf function.
-
-- [Await-chain](#await-chain)
-- [Detached](#detached)
-- [Fan-out](#fan-out)
+> Heads up — `resonate-sdk-go` is pre-release. The SDK has no semver tag yet, so this example pins to a specific commit. Expect API changes until `v0.1.0`.
 
 ## What this demonstrates
 
@@ -30,34 +26,32 @@ Key API: collect `[]*Future` in one pass, `future.Await(&out)` in a second pass.
 
 ## Prerequisites
 
-- Go 1.22 or later
-- No external server required — the example uses the in-process `localnet` transport by default
+- Go 1.22+
+- The `resonate` server CLI (only required for `-url` mode — the example defaults to in-process localnet). Install with Homebrew on macOS or Linux:
+  ```
+  brew install resonatehq/tap/resonate
+  ```
+  Other install paths: <https://docs.resonatehq.io/get-started/install>.
 
-To run against a live Resonate server instead:
+## Setup
 
-```shell
-brew install resonatehq/tap/resonate
-resonate serve --storage-type=sqlite
-```
-
-## Clone
-
-```shell
-git clone https://github.com/resonatehq-examples/example-async-rpc-go
+```sh
+git clone https://github.com/resonatehq-examples/example-async-rpc-go.git
 cd example-async-rpc-go
+go mod download
 ```
 
 ## Run it
 
-Run all three patterns in sequence (uses in-process localnet):
+Run all three patterns in sequence (uses in-process localnet, no external server):
 
-```shell
+```sh
 go run . -mode=all
 ```
 
 Run a single pattern:
 
-```shell
+```sh
 go run . -mode=chain
 go run . -mode=detached
 go run . -mode=fanout
@@ -65,11 +59,14 @@ go run . -mode=fanout
 
 Run against a live Resonate server:
 
-```shell
+```sh
+resonate dev                              # in another terminal
 go run . -mode=all -url=http://localhost:8001
 ```
 
-### Expected output (`-mode=all`)
+## What to look for
+
+Expected output (`-mode=all`):
 
 ```
 === await-chain ===
@@ -112,7 +109,31 @@ On localnet the child promise is dispatched and executed within the same in-proc
 
 When using `ctx.Detached` on localnet, pass `DetachedOpts{Target: "default"}` explicitly to match the group name passed to `localnet.NewLocal`. Omitting the target causes the default resolver to return an empty string; the localnet `accepts()` filter passes an empty address, so the dispatch still works — but explicit is clearer.
 
-## Learn more
+## File structure
 
-- [Resonate Documentation](https://docs.resonatehq.io)
-- [Go SDK](https://docs.resonatehq.io/develop/go)
+```
+example-async-rpc-go/
+├── main.go        program entry point with all three patterns
+├── go.mod         module declaration + SDK pin
+├── go.sum         checksums
+├── LICENSE        Apache-2.0
+└── README.md
+```
+
+## Next steps
+
+- [Get started](https://docs.resonatehq.io/get-started) — install paths + first-program walkthrough.
+- [Durable execution concepts](https://docs.resonatehq.io/concepts) — what makes invocations durable + how the runtime resumes them.
+- [`example-fan-out-fan-in-go`](https://github.com/resonatehq-examples/example-fan-out-fan-in-go) — the fan-out pattern with a typed aggregation step.
+
+## Community
+
+- Discord: <https://resonatehq.io/discord>
+- X: <https://x.com/resonatehqio>
+- LinkedIn: <https://linkedin.com/company/resonatehq>
+- YouTube: <https://youtube.com/@resonatehq>
+- Journal: <https://journal.resonatehq.io>
+
+## License
+
+[Apache-2.0](./LICENSE)
