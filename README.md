@@ -122,6 +122,7 @@ example-async-rpc-go/
 
 ## Next steps
 
+- **Coming from Temporal?** See [MIGRATING-FROM-TEMPORAL.md](MIGRATING-FROM-TEMPORAL.md) — a side-by-side port of the matching `temporalio/samples-go` example.
 - [Get started](https://docs.resonatehq.io/get-started) — install paths + first-program walkthrough.
 - [Durable execution concepts](https://docs.resonatehq.io/concepts) — what makes invocations durable + how the runtime resumes them.
 - [`example-fan-out-fan-in-go`](https://github.com/resonatehq-examples/example-fan-out-fan-in-go) — the fan-out pattern with a typed aggregation step.
